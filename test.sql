@@ -1,261 +1,458 @@
-create database qa
-use qa
+CREATE TABLE users(
+id INT PRIMARY KEY,
+userName VARCHAR(50),
+passwordRef VARCHAR(50)
+)
 
-CREATE TABLE students(
-stu_id int primary key auto_increment,
-stu_name varchar(50),
-stu_age int ,
-stu_mark int,
-city varchar(50)
-);
+select * from users
 
-INSERT INTO students (stu_id,stu_name,stu_age,stu_mark,city) VALUES ("1","sabari","20","90","cuddalore"),
-("2","abi","19", "75", "mannai"),
-("3","adhi","18","80","thanjavur")
+ALTER TABLE users ADD COLUMN user_id INT
 
-select * from students,
+ALTER TABLE users RENAME COLUMN user_id TO userIds
 
-select stu_name,stu_mark from students #1 question
+ALTER TABLE users MODIFY COLUMN userIds VARCHAR(100)
 
-select * from students where stu_mark >=80
+ALTER TABLE users DROP COLUMN userIds
 
-select * from students where city = "cuddalore"
+select * from users
 
-select * from students where stu_age >18
+INSERT into users VALUES (1, "Vignesh", "Vignesh@123")
 
-select *from students where stu_mark between 60 and 80
+INSERT into users VALUES (2, "Suresh", "Suresh@123"),
+(3, "Devanathan", "DN@121"),
+(4, "Abdul", "Abdul123#")
 
-select  * from students where stu_name like  "a%"
-
-select * from students where city != "thanjavur"
-
-select * from students   ORDER  BY stu_mark DESC
-
-select * from students   ORDER  BY stu_mark DESC LIMIT 2
-
-#QUESTIONS 2
-
-select count(*) from students
-
-select avg (stu_mark) from students
-
-select max(stu_mark) from students
- 
-select min(stu_mark) from students
-
-select sum(stu_mark) from students
-
-select city, count(*) as total_students from students group by city
-
-select city, avg(stu_mark) from students group by city
+INSERT into users (id, userName) VALUES (5, "Revanth")
 
 
+select userName, passwordRef from users
+
+select * from users where userName = "Abdul"
+
+CREATE TABLE studentRecords(
+rollNo INT PRIMARY KEY,
+studentName VARCHAR(30) NOT NULL,
+course VARCHAR(30),
+age INT,
+yearOfStudy INT
+
+)
+
+INSERT INTO studentRecords VALUES (1, "Rajesh", "CSE", 18, 2),
+(2, "Suresh", "EEE", 20, 3),
+(3, "Subhash", "EEE", 18, 2)
+
+select * from studentRecords
+
+select * from studentRecords where course = "EEE" AND yearOfStudy = 3
+
+select * from studentRecords where course = "EEE" OR yearOfStudy = 3
+
+select * from studentRecords where course = "EEE" and yearOfStudy = 3 and age > 20
+
+select * from studentRecords where course in ("EEE", "CSE")
 
 
-create table Orders(
-order_id int primary key,
-customer_name varchar(50),
-order_date date,
-amount decimal(10,2)
-);
+CREATE TABLE sample (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    userName VARCHAR(30)
 
-insert into Orders values(1,"sabari","2026-07-22",20000);
+)
 
-insert into Orders values(2,"vicky","2026-07-20",30000);
+INSERT INTO sample (userName) VALUES ("Suresh")
+select * from sample
 
-insert into Orders values(3,"rithish","2026-02-26",10000);
+CREATE TABLE EmployeeDetails(
+emp_id INT AUTO_INCREMENT PRIMARY KEY,
+emp_name VARCHAR(50) NOT NULL,
+department VARCHAR(30) NOT NULL,
+salary DECIMAL(10, 2) NOT NULL
+) 
 
-insert into Orders values(4,"yuvaraj",current_date(),23000);
+INSERT INTO EmployeeDetails (emp_name,department,salary) VALUES
+("Ashok", "DEV", 40000),
+("Devanathan", "TESTING", 30000),
+("Revanth", "CLOUD", 60000),
+("Vignesh", "DEV", 50000)
 
-insert into Orders values(5,"sam","2025-02-26",10000);
+select * from EmployeeDetails
 
-insert into Orders values(6,"logesh","2024-02-26",10000);
+select count(*) from EmployeeDetails
+
+select count(*) as total_employees from EmployeeDetails where department = "DEV"
+
+select MAX(salary) as max_salary from EmployeeDetails where department = "DEV"
+
+select MIN(salary) as max_salary from EmployeeDetails
+
+select * from EmployeeDetails where salary = 60000
+
+select * from EmployeeDetails where salary = (select MAX(salary) from EmployeeDetails)
+
+select SUM(salary) from EmployeeDetails where department = "DEV"
+
+-- DECIMAL (1,1) - 0.0-0.9
+-- DECIMAL (2,1) - 0.0-9.9
+-- DECIMAL(3,1) - 00.0 -99.9
+-- DECIMAL (4,2) - 00.00 - 99.99
+-- DECIMAL(5,2) - 999.99
+
+select department, count(*) as total_employees from EmployeeDetails group by department
+
+select * from EmployeeDetails order by salary ASC
+select * from EmployeeDetails order by salary
+
+select department, SUM(salary) as total_salary from EmployeeDetails 
+group by department HAVING total_salary > 50000 order by total_salary DESC
+
+
+
+CREATE TABLE Customers(
+customer_id INT PRIMARY KEY AUTO_INCREMENT,
+customer_name VARCHAR(50),
+city VARCHAR(20)
+)
+
+CREATE TABLE Products(
+product_id INT PRIMARY KEY AUTO_INCREMENT,
+product_name VARCHAR(40),
+price DECIMAL(10,2)
+)
+
+CREATE TABLE Orders(
+order_id INT PRIMARY KEY AUTO_INCREMENT,
+customer_id INT,
+product_id INT,
+quantity INT,
+FOREIGN KEY (customer_id) REFERENCES Customers(customer_id),
+FOREIGN KEY (product_id) REFERENCES Products(product_id)
+)
+
+INSERT INTO Customers (customer_name, city ) values ("Vignesh", "chennai"),
+("Deva", "Madurai"),
+("Sathish", "Madurai"),
+("Abdul", "Banglore"),
+("Revanth", "Delhi")
+
+select * from Customers
+
+INSERT INTO Products (product_name, price) VALUES ("Toggle", 500),
+("Laptop", 60000),
+("Mouse", 1000),
+("KeyBoard", 1500)
+
+select * from Products
+
+INSERT INTO Orders(customer_id, product_id, quantity) VALUES 
+(1, 1, 1),
+(1,2,2),
+(2,4, 1),
+(3,3,2)
 
 select * from Orders
- 
-select * from orders where order_date > curdate() - interval 7 day;
-
-select * from orders where order_date < curdate() - interval 2 year;
-
-select order_id,datediff(curdate(),order_date)as days_diff from Orders;
-
-select year(order_date) from orders;
-
-select month(order_date) from orders;
 
 
-
-create  table Customers(
-cus_id int primary key,
-cus_name varchar(50),
-city varchar(50)
-);
+SELECT c.customer_name, c.city, p.product_name, p.price,o.quantity from Customers c 
+INNER JOIN Orders o ON c.customer_id = o.customer_id
+INNER JOIN Products p ON o.product_id = p.product_id
 
 
-create table OrdersN(
-order_id int primary key,
-cus_id int,
-amount decimal(10,2),
-foreign key (cus_id)references Customers(cus_id)
-);
+SELECT c.customer_name, c.city, p.product_name, p.price,o.quantity from Customers c
+LEFT JOIN Orders o ON c.customer_id = o.customer_id
+LEFT JOIN Products p ON o.product_id = p.product_id 
 
-insert into Customers values(1,"sabari","Cuddalore"),(2,"vicky","Trichy"),(3,"vijay","Karur");
-
-insert into OrdersN values(1,1,3000),(2,2,4000),(3,3,7688);
-
-select * from customers
-
-select * from OrdersN
-
-select c.cus_name,o.amount from Customers as c 
-inner join OrdersN as o on c.cus_id=o.cus_id;
-
-select * from Customers as c 
-inner join OrdersN as o on c.cus_id=o.cus_id;
-
-select c.cus_name,sum(o.amount) AS total_amount from Customers c 
-inner join OrdersN o on c.cus_id = o.cus_id group by c.cus_id, c.cus_name;
+SELECT c.customer_name, c.city, p.product_name, p.price,o.quantity from Customers c
+RIGHT JOIN Orders o ON c.customer_id = o.customer_id
+RIGHT JOIN Products p ON o.product_id = p.product_id 
 
 
-create table Doctor(
-doctor_id int primary key,
-doctor_name varchar(50),
-spec varchar(50)
-);
+SELECT c.customer_name, c.city, p.product_name, p.price,o.quantity from Customers c
+LEFT JOIN Orders o ON c.customer_id = o.customer_id
+LEFT JOIN Products p ON o.product_id = p.product_id 
+UNION
+SELECT c.customer_name, c.city, p.product_name, p.price,o.quantity from Customers c
+RIGHT JOIN Orders o ON c.customer_id = o.customer_id
+RIGHT JOIN Products p ON o.product_id = p.product_id 
 
-insert into doctor values ("101", "sabari", "cardiology") ,("102","vicky","md"),
-("103","rithish","demotology"),
-("104","sam","neouorology");
+CREATE TABLE Employee(
+emp_id int PRIMARY KEY,
+emp_name VARCHAR(50),
+manager_id INT
+)
 
-select * from doctor
+CREATE TABLE Employee_N(
+emp_id int PRIMARY KEY,
+emp_name VARCHAR(50),
+manager_id INT
+)
 
+INSERT INTO Employee_N VALUES (1, "Vignesh", 3),
+(2, "Deva", 3),
+(3, "Sathish", NULL)
 
-create table Patient(
-patient_id int primary key,
-patient_name varchar(50),
-age int
-);
+select * from Employee
 
-insert into Patient values(151,"sabari",25),
-(152,"vicky",55),
-(153,"raj",28),
-(154,"sam",56),
-(155,"yuva",59)
-
-select* from Patient
-
-
-create table Appointment(
-appointment_id int primary key,
-patient_id int,
-doctor_id int,
-appointment_date date,
-foreign key (patient_id)references Patient(patient_id),
-foreign key (doctor_id) references Doctor(doctor_id)
-);
-
-insert into Appointment values(1,151,101,"2026-02-10"),
-(2,152,102,"2026-05-11"),
-(3,153,103,"2026-06-12"),
-(4,154,104,"2026-07-22")
-
-create table Prescription(
-prescription_id int primary key,
-appointment_id int,
-medicine varchar(50)
-);
+select e.emp_name as EmpName, m.emp_name as Manager 
+from Employee e LEFT JOIN Employee m
+ON e.manager_id = m.emp_id where m.emp_name = "Sathish"
 
 
-insert into Prescription values(1,1,"Aspirin"),
-(2,2,"Paracetamol"),
-(3,4,"Calcium")
+SELECT c.customer_name, c.city, p.product_name, p.price,o.quantity from Customers c
+LEFT JOIN Orders o ON c.customer_id = o.customer_id
+LEFT JOIN Products p ON o.product_id = p.product_id where o.quantity > 1
+and p.price > 20000
 
-select * from Prescription
+select c.customer_name , SUM(o.quantity) as total_quantity from Customers c
+LEFT JOIN Orders o ON c.customer_id = o.customer_id
+LEFT JOIN Products p ON o.product_id = p.product_id
+group by c.customer_name
 
-select p.patient_name,d.doctor_name from Patient p 
-inner join Appointment a on a.patient_id=p.patient_id
-inner join Doctor d on a.doctor_id=d.doctor_id;
+select c.customer_name, SUM(o.quantity*p.price) as total_amount from Customers c 
+LEFT JOIN Orders o ON c.customer_id = o.customer_id
+LEFT JOIN Products p ON o.product_id = p.product_id
+group by c.customer_id HAVING total_amount > 30000
 
-select p.patient_name,d.spec ,a.appointment_date from Patient p 
-inner join Appointment a on a.patient_id=p.patient_id
-inner join Doctor d on a.doctor_id=d.doctor_id;
+select c.customer_name, SUM(o.quantity*p.price) as total_amount from Customers c 
+LEFT JOIN Orders o ON c.customer_id = o.customer_id
+LEFT JOIN Products p ON o.product_id = p.product_id
+group by c.customer_id order by total_amount DESC
 
-select p.patient_name,d.spec ,a.appointment_date,r.medicine from Patient p 
-inner join Appointment a on a.patient_id=p.patient_id
-inner join Doctor d on a.doctor_id=d.doctor_id
-inner join Prescription r on r.appointment_id=a.appointment_id;
+select c.customer_name, SUM(o.quantity*p.price) as total_amount from Customers c 
+LEFT JOIN Orders o ON c.customer_id = o.customer_id
+LEFT JOIN Products p ON o.product_id = p.product_id
+group by c.customer_id order by total_amount DESC LIMIT 1
 
-select p.patient_name,d.doctor_name,a.appointment_date from Patient p 
-inner join Appointment a on a.patient_id=p.patient_id
-inner join Doctor d on a.doctor_id=d.doctor_id;
+SELECT p.product_name, SUM(o.quantity) as total_sold from
+Products p JOIN Orders o ON p.product_id = o.product_id group by p.product_name  
 
-
-select p.patient_name,d.doctor_name,a.appointment_date from Patient p 
-inner join Appointment a on a.patient_id=p.patient_id
-inner join Doctor d on a.doctor_id=d.doctor_id;
-
-select a.appointment_date,r.medicine from Appointment a
-left join Prescription r on r.appointment_id=a.appointment_id;
-
-select d.doctor_name,p.patient_name from Doctor d
-left join Appointment a on d.doctor_id=a.doctor_id
-left join Patient P on a.patient_id =p.patient_id;
-
-select p.patient_name,d.doctor_name from Patient p
-left join Appointment a on a.patient_id=p.patient_id
-left join Doctor d on a.doctor_id=d.doctor_id;
+select c.customer_name FROM Customers c LEFT JOIN Orders o 
+ON c.customer_id = o.customer_id where o.order_id is NULL
 
 
-select d.doctor_name,p.patient_name from Appointment a
-right join Doctor d on d.doctor_id=a.doctor_id
-right join Patient p on p.patient_id=a.patient_id;
+select * from Customers
 
-select r.medicine,a.appointment_date from Appointment a
-right join Prescription r on r.appointment_id=a.appointment_id;
+select * from Customers LIMIT 2 OFFSET 2
 
-select p.patient_name,d.doctor_name from Patient p
-left join Appointment a on a.patient_id=p.patient_id 
-left join Doctor d on a.doctor_id=d.doctor_id
-union
-select p.patient_name,d.doctor_name from Patient p
-right join Appointment a on a.patient_id=p.patient_id 
-right join Doctor d on a.doctor_id=d.doctor_id;
+select * from Customers LIMIT 10 OFFSET 0
+select * from Customers LIMIT 10 OFFSET 10
+select * from Customers LIMIT 10 OFFSET 20
+CREATE TABLE product_deliveryStatus(
+id INT PRIMARY KEY,
+product_name VARCHAR(50),
+order_date DATE,
+delivery_expected TIME,
+updated_timeStamp DATETIME
+)
+insert into product_deliveryStatus VALUES (4, "Battery", "2026-07-08", "10:10:00", "2026-07-08 10:10:00")
 
-select d.doctor_name ,count(d.doctor_id)as Highest_appointment from Doctor d
-left join Appointment a on a.doctor_id=d.doctor_id
-group by d.doctor_id order by Highest_appointment desc limit 1;
+select * from product_deliveryStatus
 
-select p.patient_name from Patient p
-left join Appointment a on p.patient_id = a.patient_id
-where a.appointment_id is null;
+insert into product_deliveryStatus VALUES (5, "BackCover", CURDATE(), CURTIME(), NOW()),
+(3, "Charger", CURDATE(), CURTIME(), NOW())
 
-select a.appointment_id,a.appointment_date from Appointment a
-left join Prescription r on a.appointment_id = r.appointment_id
-where r.prescription_id is null;
+select DATE_FORMAT(order_date, "%d/%m/%Y") from product_deliveryStatus
 
-select d.doctor_name from Doctor d
-left join Appointment a on d.doctor_id = a.doctor_id
-where a.appointment_id is null;
+select DATE_FORMAT(updated_timeStamp, "%d/%m/%Y %H: %i: %s") from product_deliveryStatus
 
-select d.doctor_name from Doctor d
-left join Appointment a on d.doctor_id = a.doctor_id
-left join Patient p on a.patient_id = p.patient_id
-where p.age > 50;
+select * from product_deliveryStatus where order_date >= CURDATE() - INTERVAL 10 DAY
 
-select d.doctor_name,count(a.patient_id) as total_patients from Doctor d 
-left join Appointment a on  d.doctor_id = a.doctor_id
-group by d.doctor_id, d.doctor_name;
 
-select d.doctor_name,count(a.patient_id) as total_patients from Doctor d
-left join Appointment a on d.doctor_id = a.doctor_id
-group by d.doctor_id, d.doctor_name
-Order by total_patients desc limit 1;
 
-select d.spec,count(a.appointment_id) as total_appointments from Doctor d
-left join Appointment a on d.doctor_id = a.doctor_id
-group by d.spec;
+select * from product_deliveryStatus 
+where order_date >= NOW() - INTERVAL 2 YEAR 
 
-select d.doctor_name,count(r.prescription_id) as total_prescriptions from Doctor d
-left join Appointment a on d.doctor_id = a.doctor_id
-left join Prescription r on  a.appointment_id = r.appointment_id
-group by d.doctor_id, d.doctor_name;
+
+select * from product_deliveryStatus 
+where updated_timeStamp >= CURDATE() - INTERVAL 15 MINUTE 
+
+select * from product_deliveryStatus 
+where updated_timeStamp >= NOW() - INTERVAL '2 5' DAY_HOUR
+
+select * from product_deliveryStatus 
+where updated_timeStamp >= NOW() - INTERVAL '3 10:20' DAY_MINUTE
+
+
+
+select * from product_deliveryStatus 
+where updated_timeStamp >= NOW() - INTERVAL '3 10:20:30' DAY_SECOND
+
+select * from product_deliveryStatus 
+where updated_timeStamp >= NOW() - INTERVAL '10:20:30' HOUR_SECOND
+
+select * from product_deliveryStatus 
+where updated_timeStamp >= NOW() - INTERVAL '10:20' HOUR_MINUTE
+
+select * from product_deliveryStatus 
+where updated_timeStamp >= CURDATE() - INTERVAL '1-6' YEAR_MONTH
+
+select * from Products
+
+select * from Products where product_name LIKE 'm%'
+
+select * from Products where product_name LIKE '_o%'
+
+select * from Products where product_name LIKE '%ou%'
+
+select UPPER(product_name) from Products
+
+select LOWER(product_name) from Products
+
+select SUBSTRING(product_name, 3) from Products
+
+select CONCAT( 
+UPPER(LEFT(product_name, 1)),
+LOWER(SUBSTRING(product_name, 2))
+) as productName from Products
+
+CREATE TABLE product_Info (
+product_id int PRIMARY KEY,
+product_name VARCHAR(50),
+price INT
+)
+
+DELIMITER $$
+
+CREATE TRIGGER set_priceTo_default
+before INSERT on product_Info
+FOR EACH ROW
+BEGIN
+	if NEW.price is NULL THEN 
+     SET NEW.price = 299;
+ end if;
+END $$
+DELIMITER ;
+
+CREATE TRIGGER set_price_default
+BEFORE INSERT ON product_Info
+FOR each row
+SET NEW.price = ifnull(NEW.price, 299)
+
+insert into product_Info (product_id, product_name) VALUES (1, "RAM")
+select * from product_Info
+
+
+CREATE TRIGGER update_product_price
+before update on product_Info
+for each row
+set NEW.price = IFNULL(NEW.price,499);
+
+UPDATE product_Info SET price = NULL where product_id = 1
+
+
+CREATE TABLE product_log (
+log_id INT AUTO_INCREMENT PRIMARY KEY,
+product_id INT,
+action VARCHAR(20),
+message VARCHAR(40),
+log_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+
+DELIMITER $$
+
+CREATE TRIGGER trg_after_delete
+AFTER DELETE 
+ON product_Info
+FOR EACH ROW 
+BEGIN
+	INSERT INTO product_log(product_id, action, message)
+    VALUES(
+    OLD.product_id, 'DELETE', concat('product', OLD.product_name, 'deleted')
+    );
+END $$
+
+DELIMITER ;
+
+DELETE FROM product_Info where product_id = 1
+
+select * from product_log
+
+
+select * from Products
+
+CREATE INDEX product_price_index ON Products(price)
+
+SHOW INDEX from Products
+
+DROP INDEX product_price_index ON Products
+
+
+
+DELIMITER $$
+CREATE PROCEDURE productData()
+BEGIN
+	select * from Products;
+END $$
+
+DELIMITER ;
+
+CALL productData()
+
+DELIMITER $$
+
+CREATE procedure getProductinput(in productid INT)
+BEGIN
+	select * from Products where product_id = productid;
+END $$
+
+DELIMITER ;
+
+
+CALL getProductinput(2)
+
+DELIMITER $$
+
+CREATE procedure productCountNew()
+BEGIN
+	select COUNT(*) as total_products from Products;
+    select AVG(price) as average_price from Products;
+END $$
+
+DELIMITER ;
+
+CALL productCountNew()
+
+DROP PROCEDURE IF EXISTS productCountNew
+
+SHOW PROCEDURE STATUS
+
+
+
+DELIMITER $$
+
+CREATE PROCEDURE productCountNew(OUT total INT)
+BEGIN
+	select COUNT(*) INTO total from Products;
+END $$
+
+DELIMITER ;
+
+CALL productCountNew(@count);
+
+select @count
+
+
+
+
+CREATE TABLE accounts(
+id INT PRIMARY KEY,
+customer_name VARCHAR(50),
+balance DECIMAL(10,2)
+)
+
+INSERT INTO accounts VALUES (1, "john", 5000),
+(2, "Alex", 3000)
+
+
+START TRANSACTION;
+UPDATE accounts SET balance = balance-1000 where id = 1; 
+UPDATE accounts SET balance = balance+1000 where id = 2;
+COMMIT;
+
+rollback;
+
+select * from accounts;
+
+START TRANSACTION;
+UPDATE accounts SET balance = balance-1000 where id = 1; 
+UPDATE accounts SET balance = balance+1000 where id = 3;
+ROLLBACK;
